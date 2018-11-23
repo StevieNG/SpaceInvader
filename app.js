@@ -10,9 +10,7 @@ let stop = document.getElementById("stop")
 let intervalID="";
 let status = document.getElementById("gameStatus")
 let isShooting =false;
-let aliendirection="right"
-
-
+let aliendirection="right"      
 
 let shipImage= new Image()
 shipImage.src="./img/ship.svg"
@@ -85,7 +83,6 @@ function drawAlien(){
       ctx.drawImage(aliensImage, alien[i].x, alien[i].y , 30, 20);
    }
 }
-
 function alienDirection(){
 
    if (alien[47].x>= 670 ){
@@ -94,7 +91,6 @@ function alienDirection(){
          alien[i].y +=10;
       }
     
-
    }
    if (alien[0].x<= 0 ){
       aliendirection="right"
@@ -121,93 +117,20 @@ function moveAlien(){
    }
 
 }
-//move aliens note
-
-// function moveTheAliens() {
-//    for(let i = 0; i < alien.length; i++) {
-//       if(alien[i].x > canvas.width) {
-//          alien[i].x -= 10
-//       } 
-//       else if(alien[i].y < canvas.height) {
-//          alien[i].y -=10
-//       }
-//    }
-// }
-
-
-
-
-// drawAlien()
-
-
-   // function moveAlien(){
-
-   //       setInterval(drawAlien, 10000)
-
-   // }
-   // moveAlien()
-
-
-   // for(let i = 0; i < 12 ; i++) {
-   //     ctx.fillStyle="green";
-   //     ctx.drawImage(aliensImage, 50+(i*50), 50, 30, 20);
-
-   //     ctx.fillStyle="lime";
-   //     ctx.drawImage(aliensImage,50+(i*50), 100, 30, 20);
-
-   //     ctx.fillStyle="yellow";
-   //     ctx.drawImage(aliensImage, 50+(i*50), 150, 30, 20);
-
-   //     ctx.fillStyle="orange";
-   //     ctx.drawImage(aliensImage, 50+(i*50), 200, 30, 20);
-   // }
-
-
-
-
-
-
-
-
-
-
-
-/* Drawing the Bullet that go on the top of the canvas */
-
-// function drawBullet() {
-//  for( let i = 0; i < 15  ; i++) {
-       
-//     bulletInterval =setInterval ( 
-//         function() {
-//             ctx.beginPath()
-//             ctx.fillStyle = "black";
-//             ctx.arc(350, 460 - (i * 40), 5, 0, 2 * Math.PI, true)
-//             ctx.stroke();
-//             ctx.fill()
-//         },2000)
-//     }
-// }
 
 function shootBullet(){
-  
-   
-   console.log(isShooting)
-   if (isShooting===false){
 
+   if (isShooting===false){
       isShooting=true;
       deltaY=0;
       currentx= deltaX;
       drawBullet()}
-
 }
 
-
-function drawBullet(){
-               
+function drawBullet(){        
          if(deltaY>=-500){
                setTimeout( function(){ 
                   deltaY-=10;
-                  //  ctx.clearRect(0, 0, 700, 500);
                   ctx.beginPath();
                   ctx.fillStyle = "black";
                   ctx.arc(350+currentx, 480+deltaY, 5, 0, 2 * Math.PI, true)
@@ -215,15 +138,10 @@ function drawBullet(){
                   ctx.fill();
                    console.log(deltaY)
                   drawBullet() }, 20  ) 
-               
-           
-            
-               }
+                  }
          else if ( deltaY<500){
             isShooting=false;
          }
-                              
-    
 }
 
 /* The event listeners that move the ship */
@@ -232,24 +150,15 @@ document.onkeydown = function(e) {
 
    if (e.keyCode === 37){
        deltaX-=5;
-    //    deltaY+=5;
-
-
    }
    else if (e.keyCode === 39){
        deltaX+=5;
-    //    deltaY+=5
-
        console.log(deltaX)
    } else if(e.keyCode === 32) {
-   
 
        shootBullet();
          moveAlien();
          drawAlien();
-
-         console.log(alien)
-
    }
 }
 
