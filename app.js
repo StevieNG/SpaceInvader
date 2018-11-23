@@ -16,7 +16,7 @@ let shipImage= new Image()
 shipImage.src="./img/ship.svg"
 
 let aliensImage= new Image()
-aliensImage.src="./img/alien.svg"
+aliensImage.src="./img/alien2.svg"
 
 // let shipImage= new Image()
 // shipImage.src="./img/ship.svg"
@@ -47,7 +47,7 @@ function clearScreen() {
 function drawShip(){
   
   
-   ctx.fillStyle="#FF0000";
+   ctx.fillStyle="green";
 
    if (deltaX >350){
        deltaX=350;
@@ -60,8 +60,6 @@ function drawShip(){
    // ctx.fillRect();
    drawAlien();
 }
-
-
 /* Drawing the Aliens that go on the top of the canvas */
 
 let alien=[];
@@ -79,7 +77,7 @@ let sideMove =0;
 
 function drawAlien(){
    for(i=0; i<alien.length; i++) {
-      ctx.fillStyle="green";
+      ctx.fillStyle="red";
       ctx.drawImage(aliensImage, alien[i].x, alien[i].y , 30, 20);
    }
 }
@@ -162,6 +160,11 @@ document.onkeydown = function(e) {
    }
 }
 
+setInterval(() => {
+     moveAlien();
+         drawAlien();
+   
+}, 800);
 
 
 main()
