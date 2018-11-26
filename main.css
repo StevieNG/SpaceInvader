@@ -9,6 +9,14 @@ top: 60px;}
 
 
 #myCanvas {
+ 
     margin-top: 40px;
+    margin-left:25%;
     background-color: white;
+}
+
+#gameStatus {
+    font-size: 30px;
+
+
 }

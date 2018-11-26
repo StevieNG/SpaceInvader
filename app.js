@@ -1,6 +1,11 @@
 
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+ctx.font = 'italic 18px Arial';
+   ctx.textAlign = 'center';
+   ctx. textBaseline = 'left';
+   ctx.fillStyle = 'red';
+   ctx.fillText('Score:', 150, 50);
 let x=canvas.width/2
 let y= canvas.height/2
 let deltaX=0;
@@ -14,22 +19,32 @@ let aliendirection="right";
 let bullteX =0
 let bulletY =0
 let bulletIsAlive= true;
+let alienBulletIsAlive =true;
+let score =0;
+let aliendeltaY =0;
+let alienIsShooting =false
 
 let shipImage= new Image()
 shipImage.src="./img/ship.svg"
 
 let aliensImage= new Image()
-aliensImage.src="./img/alien2.svg"
+aliensImage.src="./img/alien.svg"
 
-// let shipImage= new Image()
-// shipImage.src="./img/ship.svg"
-   // ctx.drawImage(shipImage,0,0)
+/* The function too draw the title */
+function drawTitle() {
+   ctx.font = '18px Arial';
+   ctx.textAlign = 'center';
+   ctx. textBaseline = 'left';
+   ctx.fillStyle = 'black';
+
+   ctx.fillText('Score: '+score, 350, 20);
+}
 
 /* The functions to start and stop the game */
 function main(){
    deltaX=0;
    
-   status.innerHTML= " Score: ???? "
+   status.innerHTML= " Space Invader !!!"
    intervalID = setInterval( clearScreen, 20)
    setInterval(drawShip,20)
 }
@@ -49,6 +64,7 @@ function clearScreen() {
 
 function drawShip(){
    ctx.fillStyle="green";
+   drawTitle();
 
    if (deltaX >350){
        deltaX=350;
@@ -72,7 +88,7 @@ for (i=0; i<12; i++){
          isAlive: true,
    }
    )
-}}
+}}   
 
 let sideMove =0;
 
@@ -80,7 +96,11 @@ function drawAlien(){
    for(i=0; i<alien.length; i++) {
 
       if(alien[i].isAlive===true){
-      ctx.fillStyle="gray";
+      // ctx.fillStyle="red";
+      // ctx.fillRect="red";
+      
+      
+ 
       ctx.drawImage(aliensImage, alien[i].x, alien[i].y , 30, 20);}
    }
 }
@@ -105,10 +125,8 @@ function moveAlien(){
 
    alienDirection()
    if (aliendirection==="right"){
-      
       for(i=0; i<alien.length; i++) {
          alien[i].x +=10;
-
    }}
 
    else {
@@ -134,11 +152,46 @@ function collision(){
       if (bulletX >=alien[i].x && bulletX <=alien[i].x+30    && bulletY >= alien[i].y && bulletY<= alien[i].y+20  && alien[i].isAlive===true ) {
          alien[i].isAlive=false;
          bulletIsAlive=false
-         console.log("hit")
+         score+=10;
+         // status.innerHTML= score;
+
       }
    
    
    }  
+}
+
+function drawAlienBullet (){
+   if(aliendeltaY<=500 && alienBulletIsAlive===true){
+   setTimeout( function(){ 
+      aliendeltaY+=10;
+      ctx.beginPath();
+      ctx.fillStyle = "pink";
+      // ctx.arc(350+currentx, 480+deltaY, 3, 0, 2 * Math.PI, true)
+      ctx.fillRect(alien[1].x+10, alien[1].y+aliendeltaY,5,15);
+      // bulletX=350+currentx;
+      // bulletY=deltaY+480;
+      // console.log("X:" +bulletX)
+      // console.log("Y:" +bulletY)
+      ctx.stroke();
+      ctx.fill();
+      // collision()
+
+      drawAlienBullet() }, 20  ) 
+      }
+      else if ( aliendeltaY>500){
+         alienIsShooting=false;}
+   }
+
+function shootAlienBullet(){
+
+   if (alienIsShooting===false){
+      alienIsShooting=true;
+      aliendeltaY=0;
+
+      alienBulletIsAlive= true;
+      drawAlienBullet()}
+
 }
 
  
@@ -148,13 +201,13 @@ function drawBullet(){
                setTimeout( function(){ 
                   deltaY-=10;
                   ctx.beginPath();
-                  ctx.fillStyle = "pink";
+                  ctx.fillStyle = "green";
                   // ctx.arc(350+currentx, 480+deltaY, 3, 0, 2 * Math.PI, true)
                   ctx.fillRect(350+currentx, 480+deltaY,5,15);
                   bulletX=350+currentx;
                   bulletY=deltaY+480;
-                  console.log("X:" +bulletX)
-                  console.log("Y:" +bulletY)
+                  // console.log("X:" +bulletX)
+                  // console.log("Y:" +bulletY)
                   ctx.stroke();
                   ctx.fill();
                   collision()
@@ -181,14 +234,15 @@ document.onkeydown = function(e) {
 
        shootBullet();
          // moveAlien();
-         // drawAlien();
+          shootAlienBullet();
          console.log()
    }
 }
 
 setInterval(() => {
-     moveAlien();
-         drawAlien();
+   moveAlien();
+   drawAlien();
+   
    
 }, 800);
 
