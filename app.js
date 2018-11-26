@@ -10,7 +10,10 @@ let stop = document.getElementById("stop")
 let intervalID="";
 let status = document.getElementById("gameStatus")
 let isShooting =false;
-let aliendirection="right"      
+let aliendirection="right";
+let bullteX =0
+let bulletY =0
+let bulletIsAlive= true;
 
 let shipImage= new Image()
 shipImage.src="./img/ship.svg"
@@ -45,14 +48,11 @@ function clearScreen() {
 /* Drawing the Ship that go on the top of the canvas */
 
 function drawShip(){
-  
-  
    ctx.fillStyle="green";
 
    if (deltaX >350){
        deltaX=350;
    }
-
    else if(deltaX <-350){
        deltaX=-350;
    }
@@ -69,6 +69,7 @@ for (i=0; i<12; i++){
    alien.push({
          x: 20+i *50,
          y: 50+j *30,
+         isAlive: true,
    }
    )
 }}
@@ -77,8 +78,10 @@ let sideMove =0;
 
 function drawAlien(){
    for(i=0; i<alien.length; i++) {
-      ctx.fillStyle="red";
-      ctx.drawImage(aliensImage, alien[i].x, alien[i].y , 30, 20);
+
+      if(alien[i].isAlive===true){
+      ctx.fillStyle="gray";
+      ctx.drawImage(aliensImage, alien[i].x, alien[i].y , 30, 20);}
    }
 }
 function alienDirection(){
@@ -109,7 +112,7 @@ function moveAlien(){
    }}
 
    else {
-      for(i=0; i<alien.length; i++) {
+      for(i=0; i<alien.length; i++) {   
          alien[i].x -=10;
       }
    }
@@ -122,19 +125,40 @@ function shootBullet(){
       isShooting=true;
       deltaY=0;
       currentx= deltaX;
+      bulletIsAlive= true;
       drawBullet()}
 }
 
+function collision(){
+   for (i=0; i<alien.length; i++){
+      if (bulletX >=alien[i].x && bulletX <=alien[i].x+30    && bulletY >= alien[i].y && bulletY<= alien[i].y+20  && alien[i].isAlive===true ) {
+         alien[i].isAlive=false;
+         bulletIsAlive=false
+         console.log("hit")
+      }
+   
+   
+   }  
+}
+
+ 
+
 function drawBullet(){        
-         if(deltaY>=-500){
+         if(deltaY>=-500 && bulletIsAlive===true){
                setTimeout( function(){ 
                   deltaY-=10;
                   ctx.beginPath();
-                  ctx.fillStyle = "black";
-                  ctx.arc(350+currentx, 480+deltaY, 5, 0, 2 * Math.PI, true)
+                  ctx.fillStyle = "pink";
+                  // ctx.arc(350+currentx, 480+deltaY, 3, 0, 2 * Math.PI, true)
+                  ctx.fillRect(350+currentx, 480+deltaY,5,15);
+                  bulletX=350+currentx;
+                  bulletY=deltaY+480;
+                  console.log("X:" +bulletX)
+                  console.log("Y:" +bulletY)
                   ctx.stroke();
                   ctx.fill();
-                   console.log(deltaY)
+                  collision()
+            
                   drawBullet() }, 20  ) 
                   }
          else if ( deltaY<500){
@@ -151,12 +175,14 @@ document.onkeydown = function(e) {
    }
    else if (e.keyCode === 39){
        deltaX+=5;
-       console.log(deltaX)
+      //  console.log(deltaX )
+      //  console.log(deltaY )
    } else if(e.keyCode === 32) {
 
        shootBullet();
-         moveAlien();
-         drawAlien();
+         // moveAlien();
+         // drawAlien();
+         console.log()
    }
 }
 
