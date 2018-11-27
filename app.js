@@ -17,6 +17,7 @@ let bulletIsAlive= true;
 let alienBulletIsAlive =true;
 let maxAlienBullet=5;
 let alienBulletOnScreen =0;
+let aliveAlien = [];
 
 let score =0;
 let aliendeltaY =0;
@@ -102,13 +103,19 @@ function drawAlien(){
 }
 
 function alienDirection(){
+   // for (i=0; i<alien.length;i++){
+   //       if (alien[i].isAlive===true){
+   //          aliveAlien.push(alien[i])
+   //          console.log(aliveAlien)
+   //       }
+
+
+   // }
+
    var max= Math.max.apply(Math, alien.map(function(o){ return o.x}))
-   console.log(max);
    var min= Math.min.apply(Math, alien.map(function(o){ return o.x}))
-   console.log(min)
 
-
-
+       
    if (max>= 670 ){
       aliendirection="left"
       for(i=0; i<alien.length; i++) {
@@ -129,21 +136,20 @@ function alienDirection(){
 function moveAlien(){
 
    alienDirection()
-   if (aliendirection==="right"){
+   if (aliendirection==="right" ){
       for(i=0; i<alien.length; i++) {
          alien[i].x +=10;
-   }}
+   }
+}
 
    else {
       for(i=0; i<alien.length; i++) {   
          alien[i].x -=10;
       }
    }
-
 }
 
-function shootBullet(){
-
+function shootBullet() {
    if (isShooting===false){
       isShooting=true;
       deltaY=0;
@@ -152,28 +158,28 @@ function shootBullet(){
       drawBullet()}
 }
 
-function collision(){
+function collision() {
    for (i=0; i<alien.length; i++){
-      if (bulletX >=alien[i].x && bulletX <=alien[i].x+30    && bulletY >= alien[i].y && bulletY<= alien[i].y+20  && alien[i].isAlive===true ) {
+      if (bulletX >=alien[i].x && bulletX <=alien[i].x+30    && bulletY >= alien[i].y && bulletY<= alien[i].y+20  && alien[i].isAlive === true ) {
          alien[i].isAlive=false;
          bulletIsAlive=false
          score+=10;
-         // status.innerHTML= score;
-
-      }
-   
-   
-   }  
+         // aliveAlien.push(alien[i].isAlive === false)
+         // console.log(aliveAlien)
+      } 
+   }
 }
 
 /* Now drawing the bullet coming from the alien */
 function shootAlienBullet(){
-   if (alienBulletOnScreen<maxAlienBullet){
+
+   let randomAlien = Math.floor(Math.random()*48)
+   
+
+   if (alienBulletOnScreen<maxAlienBullet && alien[randomAlien].isAlive ===true ){
       alienBulletOnScreen++;
       // aliendeltaY=0;
-      alienBulletIsAlive= true;
-      let randomAlien = Math.floor(Math.random()*48)
-      console.log(alienBulletOnScreen)
+      
       drawAlienBullet(randomAlien, aliendeltaY)
    }
 }
