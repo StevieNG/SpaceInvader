@@ -1,11 +1,6 @@
 
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-ctx.font = 'italic 18px Arial';
-   ctx.textAlign = 'center';
-   ctx. textBaseline = 'left';
-   ctx.fillStyle = 'red';
-   ctx.fillText('Score:', 150, 50);
 let x=canvas.width/2
 let y= canvas.height/2
 let deltaX=0;
@@ -20,9 +15,13 @@ let bullteX =0
 let bulletY =0
 let bulletIsAlive= true;
 let alienBulletIsAlive =true;
+let maxAlienBullet=5;
+let alienBulletOnScreen =0;
+
 let score =0;
 let aliendeltaY =0;
 let alienIsShooting =false
+
 
 let shipImage= new Image()
 shipImage.src="./img/ship.svg"
@@ -43,7 +42,6 @@ function drawTitle() {
 /* The functions to start and stop the game */
 function main(){
    deltaX=0;
-   
    status.innerHTML= " Space Invader !!!"
    intervalID = setInterval( clearScreen, 20)
    setInterval(drawShip,20)
@@ -63,7 +61,7 @@ function clearScreen() {
 /* Drawing the Ship that go on the top of the canvas */
 
 function drawShip(){
-   ctx.fillStyle="green";
+   ctx.fillStyle="green"; 
    drawTitle();
 
    if (deltaX >350){
@@ -92,34 +90,41 @@ for (i=0; i<12; i++){
 
 let sideMove =0;
 
+
+
+
 function drawAlien(){
    for(i=0; i<alien.length; i++) {
 
       if(alien[i].isAlive===true){
-      // ctx.fillStyle="red";
-      // ctx.fillRect="red";
-      
-      
- 
       ctx.drawImage(aliensImage, alien[i].x, alien[i].y , 30, 20);}
    }
 }
-function alienDirection(){
 
-   if (alien[47].x>= 670 ){
+function alienDirection(){
+   var max= Math.max.apply(Math, alien.map(function(o){ return o.x}))
+   console.log(max);
+   var min= Math.min.apply(Math, alien.map(function(o){ return o.x}))
+   console.log(min)
+
+
+
+   if (max>= 670 ){
       aliendirection="left"
       for(i=0; i<alien.length; i++) {
          alien[i].y +=10;
       }
     
    }
-   if (alien[0].x<= 0 ){
+   if (min<= 0 ){
       aliendirection="right"
       for(i=0; i<alien.length; i++) {
          alien[i].y +=10;
       }
    }
 }
+
+
 
 function moveAlien(){
 
@@ -161,41 +166,38 @@ function collision(){
    }  
 }
 
-function drawAlienBullet (){
-   if(aliendeltaY<=500 && alienBulletIsAlive===true){
-   setTimeout( function(){ 
-      aliendeltaY+=10;
-      ctx.beginPath();
-      ctx.fillStyle = "pink";
-      // ctx.arc(350+currentx, 480+deltaY, 3, 0, 2 * Math.PI, true)
-      ctx.fillRect(alien[1].x+10, alien[1].y+aliendeltaY,5,15);
-      // bulletX=350+currentx;
-      // bulletY=deltaY+480;
-      // console.log("X:" +bulletX)
-      // console.log("Y:" +bulletY)
-      ctx.stroke();
-      ctx.fill();
-      // collision()
-
-      drawAlienBullet() }, 20  ) 
-      }
-      else if ( aliendeltaY>500){
-         alienIsShooting=false;}
-   }
-
+/* Now drawing the bullet coming from the alien */
 function shootAlienBullet(){
-
-   if (alienIsShooting===false){
-      alienIsShooting=true;
-      aliendeltaY=0;
-
+   if (alienBulletOnScreen<maxAlienBullet){
+      alienBulletOnScreen++;
+      // aliendeltaY=0;
       alienBulletIsAlive= true;
-      drawAlienBullet()}
-
+      let randomAlien = Math.floor(Math.random()*48)
+      console.log(alienBulletOnScreen)
+      drawAlienBullet(randomAlien, aliendeltaY)
+   }
 }
 
- 
+function drawAlienBullet (alienIndex, dy){
+   if(dy<=500 && alienBulletOnScreen<maxAlienBullet){
+   setTimeout( function(){ 
+      dy+=5;
+      ctx.beginPath();
+      ctx.fillStyle = "green"; 
+      
+      ctx.fillRect(alien[alienIndex].x+10, alien[alienIndex].y+dy,5,15);   
+      ctx.stroke();
+      ctx.fill();
+      drawAlienBullet(alienIndex, dy) }, 20 ) 
+      }
+      else if ( dy>500) {
+         alienBulletOnScreen--;
+      }
+   }
 
+
+ 
+/* Drawing the bullet coming from the ship */
 function drawBullet(){        
          if(deltaY>=-500 && bulletIsAlive===true){
                setTimeout( function(){ 
@@ -234,14 +236,14 @@ document.onkeydown = function(e) {
 
        shootBullet();
          // moveAlien();
-          shootAlienBullet();
-         console.log()
+
    }
 }
 
 setInterval(() => {
    moveAlien();
    drawAlien();
+   shootAlienBullet();
    
    
 }, 800);
