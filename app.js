@@ -87,7 +87,19 @@ for (i=0; i<12; i++){
          isAlive: true,
    }
    )
+
+   aliveAlien.push({
+      x: 20+i *50,
+      y: 50+j *30,
+
+   })
 }}   
+
+
+// console.log(alien);
+//  console.log(aliveAlien);
+
+
 
 let sideMove =0;
 
@@ -112,8 +124,9 @@ function alienDirection(){
 
    // }
 
-   var max= Math.max.apply(Math, alien.map(function(o){ return o.x}))
-   var min= Math.min.apply(Math, alien.map(function(o){ return o.x}))
+   var max= Math.max.apply(Math, aliveAlien.map(function(o){ return o.x}))
+   var min= Math.min.apply(Math, aliveAlien.map(function(o){ return o.x}))
+   console.log(max)
 
        
    if (max>= 670 ){
@@ -134,20 +147,23 @@ function alienDirection(){
 
 
 function moveAlien(){
-
    alienDirection()
    if (aliendirection==="right" ){
       for(i=0; i<alien.length; i++) {
          alien[i].x +=10;
+         if (aliveAlien[i]!=null) { aliveAlien[i].x +=10;}
+     
+
    }
-}
+   }
 
    else {
       for(i=0; i<alien.length; i++) {   
          alien[i].x -=10;
-      }
+         if (aliveAlien[i]!=null) {aliveAlien[i].x-=10;} 
+        
    }
-}
+}}
 
 function shootBullet() {
    if (isShooting===false){
@@ -155,17 +171,20 @@ function shootBullet() {
       deltaY=0;
       currentx= deltaX;
       bulletIsAlive= true;
-      drawBullet()}
+      drawBullet()
+   }
 }
 
 function collision() {
    for (i=0; i<alien.length; i++){
       if (bulletX >=alien[i].x && bulletX <=alien[i].x+30    && bulletY >= alien[i].y && bulletY<= alien[i].y+20  && alien[i].isAlive === true ) {
          alien[i].isAlive=false;
-         bulletIsAlive=false
+         aliveAlien.splice(i, 1);
+         console.log(aliveAlien)
+         console.log(alien)
+         bulletIsAlive= false
          score+=10;
-         // aliveAlien.push(alien[i].isAlive === false)
-         // console.log(aliveAlien)
+
       } 
    }
 }
@@ -178,7 +197,7 @@ function shootAlienBullet(){
 
    if (alienBulletOnScreen<maxAlienBullet && alien[randomAlien].isAlive ===true ){
       alienBulletOnScreen++;
-      // aliendeltaY=0;
+    
       
       drawAlienBullet(randomAlien, aliendeltaY)
    }
