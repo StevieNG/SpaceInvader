@@ -95,16 +95,10 @@ for (i=0; i<12; i++){
    })
 }}   
 
-
 // console.log(alien);
 //  console.log(aliveAlien);
 
-
-
 let sideMove =0;
-
-
-
 
 function drawAlien(){
    for(i=0; i<alien.length; i++) {
@@ -115,28 +109,19 @@ function drawAlien(){
 }
 
 function alienDirection(){
-   // for (i=0; i<alien.length;i++){
-   //       if (alien[i].isAlive===true){
-   //          aliveAlien.push(alien[i])
-   //          console.log(aliveAlien)
-   //       }
-
-
-   // }
-
-   var max= Math.max.apply(Math, aliveAlien.map(function(o){ return o.x}))
+    var max= Math.max.apply(Math, aliveAlien.map(function(o){ return o.x}))
    var min= Math.min.apply(Math, aliveAlien.map(function(o){ return o.x}))
    console.log(max)
 
        
-   if (max>= 670 ){
+   if (max>= 670 && max!=101 ){
       aliendirection="left"
       for(i=0; i<alien.length; i++) {
          alien[i].y +=10;
       }
     
    }
-   if (min<= 0 ){
+   if (min<= 0 && min!=101 ){
       aliendirection="right"
       for(i=0; i<alien.length; i++) {
          alien[i].y +=10;
@@ -179,9 +164,10 @@ function collision() {
    for (i=0; i<alien.length; i++){
       if (bulletX >=alien[i].x && bulletX <=alien[i].x+30    && bulletY >= alien[i].y && bulletY<= alien[i].y+20  && alien[i].isAlive === true ) {
          alien[i].isAlive=false;
-         aliveAlien.splice(i, 1);
+         // aliveAlien.splice(i, 1);
+          aliveAlien[i].x=101;
          console.log(aliveAlien)
-         console.log(alien)
+         // console.log(alien)
          bulletIsAlive= false
          score+=10;
 
